@@ -1,0 +1,32 @@
+# WikiVerify Configuration Template
+# Copy this to .env and update with your actual values
+
+# Database Configuration
+# Format: postgresql://user:password@host:port/database
+# For Docker: postgresql://wikiverify:wikiverify@localhost:5432/wikiverify
+# For local PostgreSQL: postgresql://your_username@localhost:5432/wikiverify
+DATABASE_URL=postgresql://wikiverify:wikiverify@localhost:5432/wikiverify
+
+# Wikipedia API Configuration
+# Use your email address for identification
+WIKIPEDIA_USER_AGENT=WikiVerify/1.0 (contact@example.com)
+
+# LLM Configuration (Optional - for Evidence Agent)
+# Get your API key from https://platform.openai.com/api-keys
+OPENAI_API_KEY=
+
+# Internet Archive Configuration (Optional)
+# Your email for Internet Archive API
+INTERNET_ARCHIVE_EMAIL=
+
+# PubMed Configuration (Optional but recommended)
+# Your email for PubMed E-utilities API (required for polite pool)
+PUBMED_EMAIL=
+
+# Rate Limiting
+# Delay between requests in seconds (be respectful to APIs)
+RATE_LIMIT_DELAY=1
+
+# Request Timeout
+# Timeout for HTTP requests in seconds
+CHECK_TIMEOUT=10
