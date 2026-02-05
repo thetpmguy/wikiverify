@@ -7,7 +7,7 @@ class ProblemType(str, Enum):
     BROKEN_LINK = "broken_link"
     RETRACTION = "retraction"
     SOURCE_CHANGE = "source_change"
-    EVIDENCE_WEAK = "evidence_weak"
+    EVIDENCE_WEAK = "evidence_weak"  # Reserved for future Evidence Agent
 
 
 class Severity(str, Enum):

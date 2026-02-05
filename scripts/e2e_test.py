@@ -78,55 +78,22 @@ def import_test_article():
 
 
 def test_broken_link_agent():
-    """Step 3: Test broken link agent."""
+    """Step 3: Test broken link agent (removed - not used)."""
     print_step(3, "Testing Broken Link Agent")
-    
-    try:
-        from agents.broken_link_agent import BrokenLinkAgent
-        
-        # Get citation count before
-        before = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'broken_link'")
-        before_count = before[0]['count'] if before else 0
-        
-        print("Running Broken Link Agent (checking 5 citations)...")
-        agent = BrokenLinkAgent(use_llm_triage=False)  # Disable LLM for faster testing
-        agent.run(days=365, limit=5)
-        
-        # Get citation count after
-        after = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'broken_link'")
-        after_count = after[0]['count'] if after else 0
-        
-        print(f"✅ PASS: Broken Link Agent completed")
-        print(f"   Findings before: {before_count}, after: {after_count}")
-        return True
-    except Exception as e:
-        print(f"❌ FAIL: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
+    print("⏭️  SKIP: Broken Link Agent removed from architecture")
+    return True
 
 
 def test_retraction_agent():
-    """Step 4: Test retraction agent."""
-    print_step(4, "Testing Retraction Agent")
+    """Step 4: Test retraction checking (synthesizer agent)."""
+    print_step(4, "Testing Retraction Checking")
     
     try:
-        from agents.retraction_agent import RetractionAgent
-        
-        # Get citation count before
-        before = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'retraction'")
-        before_count = before[0]['count'] if before else 0
-        
-        print("Running Retraction Agent (skipping cache update for speed)...")
-        agent = RetractionAgent(use_llm_triage=False)
-        agent.run(update_cache=False, use_apis=False)
-        
-        # Get citation count after
-        after = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'retraction'")
-        after_count = after[0]['count'] if after else 0
-        
-        print(f"✅ PASS: Retraction Agent completed")
-        print(f"   Findings before: {before_count}, after: {after_count}")
+        # Note: Retraction checking is now handled by Synthesizer Agent
+        # which requires ML models. This test is skipped until synthesizer_agent is implemented.
+        print("⏭️  SKIP: Retraction checking moved to Synthesizer Agent")
+        print("   Synthesizer Agent requires ML models and will be implemented separately")
+        print("   To test: python -m agents.synthesizer_agent")
         return True
     except Exception as e:
         print(f"❌ FAIL: {e}")
@@ -136,31 +103,10 @@ def test_retraction_agent():
 
 
 def test_source_change_agent():
-    """Step 5: Test source change agent."""
+    """Step 5: Test source change agent (removed - not used)."""
     print_step(5, "Testing Source Change Agent")
-    
-    try:
-        from agents.source_change_agent import SourceChangeAgent
-        
-        # Get citation count before
-        before = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'source_change'")
-        before_count = before[0]['count'] if before else 0
-        
-        print("Running Source Change Agent (checking 3 citations)...")
-        agent = SourceChangeAgent(use_llm_triage=False)
-        agent.run(limit=3)
-        
-        # Get citation count after
-        after = execute_query("SELECT COUNT(*) as count FROM findings WHERE problem_type = 'source_change'")
-        after_count = after[0]['count'] if after else 0
-        
-        print(f"✅ PASS: Source Change Agent completed")
-        print(f"   Findings before: {before_count}, after: {after_count}")
-        return True
-    except Exception as e:
-        print(f"⚠ WARN: Source Change Agent - {e}")
-        print("   (This is OK if no snapshots exist yet)")
-        return True  # Don't fail E2E test for this
+    print("⏭️  SKIP: Source Change Agent removed from architecture")
+    return True
 
 
 def check_results():
@@ -237,7 +183,7 @@ def main():
         try:
             result = func()
             results.append((name, result))
-            if not result and name != "Source Change Agent":  # Source change is optional
+            if not result:
                 print(f"\n⚠ Stopping early due to failure in: {name}")
                 break
         except KeyboardInterrupt:

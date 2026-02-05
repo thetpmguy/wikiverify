@@ -34,7 +34,7 @@ WIKIPEDIA_USER_AGENT=WikiVerify/1.0 (your-email@example.com)
 # Your email for PubMed API (recommended)
 PUBMED_EMAIL=your-email@example.com
 
-# Optional: OpenAI API key for Evidence Agent
+# Optional: OpenAI API key for LLM triage and enhanced explanations
 OPENAI_API_KEY=your_key_here
 ```
 

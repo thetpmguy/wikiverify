@@ -11,8 +11,9 @@ DATABASE_URL=postgresql://wikiverify:wikiverify@localhost:5432/wikiverify
 # Use your email address for identification
 WIKIPEDIA_USER_AGENT=WikiVerify/1.0 (contact@example.com)
 
-# LLM Configuration (Optional - for Evidence Agent)
+# LLM Configuration (Optional - for LLM triage and enhanced explanations)
 # Get your API key from https://platform.openai.com/api-keys
+# Used by all agents for false positive filtering and better explanations
 OPENAI_API_KEY=
 
 # Internet Archive Configuration (Optional)

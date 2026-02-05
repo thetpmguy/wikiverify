@@ -71,8 +71,6 @@ WikiVerify is a system of automated agents that monitor Wikipedia citations for 
 wiki-verify/
 ├── agents/
 │   ├── base_agent.py              # Abstract base class for all agents
-│   ├── broken_link_agent.py       # Detects broken URLs
-│   ├── source_change_agent.py     # Detects content changes in sources
 │   └── synthesizer_agent.py       # Orchestrates retraction checking and notifications
 │
 ├── core/
@@ -81,15 +79,12 @@ wiki-verify/
 │   ├── database.py                # Database operations with context manager
 │   ├── logger.py                  # Structured logging system
 │   ├── parser.py                  # Wikipedia citation parsing
-│   ├── snapshot.py                # Snapshot management for source tracking
-│   ├── utils.py                   # Shared HTTP client, rate limiter
-│   └── content_extractor.py       # Content extraction from web pages
+│   └── utils.py                   # Shared HTTP client, rate limiter
 │
 ├── integrations/
 │   ├── crossref.py                # CrossRef API client
 │   ├── pubmed.py                  # PubMed API client
 │   ├── retraction_watch.py        # Retraction Watch integration
-│   ├── internet_archive.py        # Internet Archive / Wayback Machine
 │   └── wikipedia_api.py           # Wikipedia API client
 │
 ├── ml/
@@ -463,7 +458,7 @@ citations
 findings
     id              SERIAL PRIMARY KEY
     citation_id     INTEGER REFERENCES citations(id)
-    problem_type    TEXT NOT NULL (retracted_citation, broken_link, source_changed)
+    problem_type    TEXT NOT NULL (retracted_citation)
     severity        TEXT NOT NULL (critical, major, minor, corrected)
     confidence      FLOAT
     match_method    TEXT (doi_exact, fuzzy_title)
@@ -519,7 +514,7 @@ client = HTTPClient(
 response = client.get("/works", params={"filter": "type:retraction"})
 ```
 
-Used by: all integration modules (crossref.py, pubmed.py, wikipedia_api.py, internet_archive.py). Never used during the daily checking run because the daily run makes no external API calls (except the LLM).
+Used by: all integration modules (crossref.py, pubmed.py, wikipedia_api.py). Never used during the daily checking run because the daily run makes no external API calls (except the LLM).
 
 ### Logging System (`core/logger.py`)
 
@@ -832,7 +827,9 @@ model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 ## Future Enhancements
 
-### Source Change Agent ML Integration
+> Note: The following are potential future enhancements, not part of the current architecture.
+
+### Source Change Agent ML Integration (Future)
 
 Three additional models planned for the source change detection pipeline:
 

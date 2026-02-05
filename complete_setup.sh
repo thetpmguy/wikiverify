@@ -47,7 +47,7 @@ if [ ! -f ".env" ]; then
     echo "⚠ Please update .env file with:"
     echo "  - Your email for WIKIPEDIA_USER_AGENT"
     echo "  - Your email for PUBMED_EMAIL (recommended)"
-    echo "  - OPENAI_API_KEY (optional, for Evidence Agent)"
+    echo "  - OPENAI_API_KEY (optional, for LLM triage and enhanced explanations)"
 else
     echo "✓ .env file already exists"
 fi

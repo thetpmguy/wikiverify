@@ -1,4 +1,4 @@
-"""Scheduler for running agents on a schedule."""
+"""Scheduler for running WikiVerify cycles on a schedule."""
 import schedule
 import time
 from datetime import datetime
@@ -8,75 +8,85 @@ import sys
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agents.broken_link_agent import BrokenLinkAgent
-from agents.retraction_agent import RetractionAgent
-from agents.source_change_agent import SourceChangeAgent
 from core.logger import setup_logger
 
 # Set up logging
 logger = setup_logger(__name__, log_file='wiki-verify.log')
 
 
-class AgentScheduler:
-    """Schedules and runs WikiVerify agents."""
+class WikiVerifyScheduler:
+    """Schedules and runs WikiVerify cycles (monthly, weekly, daily)."""
     
     def __init__(self):
         """Initialize the scheduler."""
-        self.broken_link_agent = BrokenLinkAgent()
-        self.retraction_agent = RetractionAgent()
-        self.source_change_agent = SourceChangeAgent()
         self.setup_schedule()
     
     def setup_schedule(self):
-        """Set up the agent schedule."""
-        # Broken Link Agent: daily at 3 AM
-        schedule.every().day.at("03:00").do(self.run_broken_link_agent)
+        """Set up the cycle schedule."""
+        # Monthly cycle: 1st of each month at 2 AM
+        schedule.every().month.do(self.run_monthly_cycle).tag("monthly")
         
-        # Retraction Agent: daily at 4 AM
-        schedule.every().day.at("04:00").do(self.run_retraction_agent)
+        # Weekly cycle: Every Monday at 3 AM
+        schedule.every().monday.at("03:00").do(self.run_weekly_cycle)
         
-        # Source Change Agent: weekly on Sunday at 2 AM
-        schedule.every().sunday.at("02:00").do(self.run_source_change_agent)
+        # Daily cycle: Every day at 6 AM
+        schedule.every().day.at("06:00").do(self.run_daily_cycle)
         
         logger.info("Schedule configured:")
-        logger.info("  - Broken Link Agent: Daily at 3:00 AM")
-        logger.info("  - Retraction Agent: Daily at 4:00 AM")
-        logger.info("  - Source Change Agent: Weekly on Sunday at 2:00 AM")
+        logger.info("  - Monthly cycle: 1st of each month at 2:00 AM")
+        logger.info("  - Weekly cycle: Every Monday at 3:00 AM")
+        logger.info("  - Daily cycle: Every day at 6:00 AM")
     
-    def run_broken_link_agent(self):
-        """Run the broken link agent."""
-        logger.info("Starting scheduled run: Broken Link Agent")
+    def run_monthly_cycle(self):
+        """Run the monthly cycle: download retraction database and precompute embeddings."""
+        logger.info("Starting monthly cycle...")
         try:
-            self.broken_link_agent.run(days=7, limit=1000)
-            logger.info("Completed: Broken Link Agent")
+            # Download retraction database
+            logger.info("Downloading retraction database...")
+            from scripts.download_retraction_database import main as download_main
+            download_main()
+            
+            # Precompute embeddings
+            logger.info("Precomputing embeddings...")
+            from scripts.precompute_retraction_embeddings import main as precompute_main
+            precompute_main()
+            
+            logger.info("Monthly cycle completed")
+        except ImportError as e:
+            logger.warning(f"Monthly cycle scripts not yet implemented: {e}")
         except Exception as e:
-            logger.error(f"Error running Broken Link Agent: {e}", exc_info=True)
+            logger.error(f"Error in monthly cycle: {e}", exc_info=True)
     
-    def run_retraction_agent(self):
-        """Run the retraction agent."""
-        logger.info("Starting scheduled run: Retraction Agent")
+    def run_weekly_cycle(self):
+        """Run the weekly cycle: import new/changed citations from Wikipedia."""
+        logger.info("Starting weekly cycle...")
         try:
-            self.retraction_agent.run(update_cache=True, use_apis=False)
-            logger.info("Completed: Retraction Agent")
+            from scripts.initial_import import main as import_main
+            import_main()
+            logger.info("Weekly cycle completed")
         except Exception as e:
-            logger.error(f"Error running Retraction Agent: {e}", exc_info=True)
+            logger.error(f"Error in weekly cycle: {e}", exc_info=True)
     
-    def run_source_change_agent(self):
-        """Run the source change agent."""
-        logger.info("Starting scheduled run: Source Change Agent")
+    def run_daily_cycle(self):
+        """Run the daily cycle: synthesizer agent checks citations for retractions."""
+        logger.info("Starting daily cycle (Synthesizer Agent)...")
         try:
-            self.source_change_agent.run(limit=500)
-            logger.info("Completed: Source Change Agent")
+            from agents.synthesizer_agent import SynthesizerAgent
+            agent = SynthesizerAgent()
+            agent.run()
+            logger.info("Daily cycle completed")
+        except ImportError as e:
+            logger.warning(f"Synthesizer Agent not yet implemented: {e}")
         except Exception as e:
-            logger.error(f"Error running Source Change Agent: {e}", exc_info=True)
+            logger.error(f"Error in daily cycle: {e}", exc_info=True)
     
-    def run_all_agents_now(self):
-        """Run all agents immediately (for testing)."""
-        logger.info("Running all agents now...")
-        self.run_broken_link_agent()
-        self.run_retraction_agent()
-        self.run_source_change_agent()
-        logger.info("All agents completed")
+    def run_all_cycles_now(self):
+        """Run all cycles immediately (for testing)."""
+        logger.info("Running all cycles now...")
+        self.run_monthly_cycle()
+        self.run_weekly_cycle()
+        self.run_daily_cycle()
+        logger.info("All cycles completed")
     
     def start(self):
         """Start the scheduler loop."""
@@ -98,19 +108,19 @@ def main():
     """Main entry point for the scheduler."""
     import argparse
     
-    parser = argparse.ArgumentParser(description='WikiVerify Agent Scheduler')
+    parser = argparse.ArgumentParser(description='WikiVerify Scheduler')
     parser.add_argument(
         '--run-now',
         action='store_true',
-        help='Run all agents immediately instead of scheduling'
+        help='Run all cycles immediately instead of scheduling'
     )
     
     args = parser.parse_args()
     
-    scheduler = AgentScheduler()
+    scheduler = WikiVerifyScheduler()
     
     if args.run_now:
-        scheduler.run_all_agents_now()
+        scheduler.run_all_cycles_now()
     else:
         scheduler.start()
 

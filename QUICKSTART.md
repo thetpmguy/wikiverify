@@ -150,7 +150,7 @@ psql -h localhost -U wikiverify -d wikiverify -c "SELECT 1;"
 1. **Import More Articles**: Edit `scripts/initial_import.py` to add more article titles
 2. **Customize Schedule**: Edit `scripts/scheduler.py` to change run times
 3. **Add Output**: Implement Wikipedia bot in `output/wiki_notify.py` (see IMPLEMENTATION_PLAN.md)
-4. **Add LLM Analysis**: Implement Evidence Agent (requires API keys)
+4. **Configure LLM**: Add OPENAI_API_KEY to .env for enhanced triage and explanations (optional)
 
 ## Files Created
 

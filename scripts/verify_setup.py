@@ -12,9 +12,7 @@ def check_imports():
         from core.config import Config
         from core.database import get_connection
         from integrations.wikipedia_api import WikipediaAPI
-        from agents.broken_link_agent import BrokenLinkAgent
-        from agents.retraction_agent import RetractionAgent
-        from agents.source_change_agent import SourceChangeAgent
+        # Note: Only Synthesizer Agent is used for retraction checking
         print("✓ All imports successful")
         return True
     except ImportError as e:
@@ -133,7 +131,7 @@ def main():
         print("🎉 All checks passed! WikiVerify is ready to use.")
         print("\nNext steps:")
         print("  1. Import articles: python scripts/initial_import.py")
-        print("  2. Run an agent: python -m agents.broken_link_agent")
+        print("  2. Run synthesizer agent: python -m agents.synthesizer_agent")
         print("  3. Start scheduler: python scripts/scheduler.py --run-now")
     else:
         print("⚠ Some checks failed. Please fix the issues above.")

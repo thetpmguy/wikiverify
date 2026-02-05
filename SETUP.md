@@ -103,14 +103,10 @@ wiki-verify/
 
 ## Next Steps
 
-🚧 **To Be Implemented:**
-- PubMed integration
-- CrossRef integration
-- Source Change Agent
-- Evidence Agent
-- Output formatters
-- Wikipedia bot
-- Scheduler
+🚧 **Future Enhancements:**
+- Evidence Agent (LLM-based claim verification)
+- Wikipedia bot (automated Talk page posting)
+- Wikipedia gadget (browser extension)
 
 ## Troubleshooting
 

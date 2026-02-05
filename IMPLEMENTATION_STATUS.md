@@ -64,12 +64,12 @@
 
 ## 🚧 Remaining Components
 
-### Phase 5: Evidence Agent (LLM Required)
+### Phase 5: Evidence Agent (Future Work)
 - [ ] Semantic Scholar integration
 - [ ] OpenAlex integration
-- [ ] LLM triage layer
-- [ ] Deep analysis layer
+- [ ] Deep analysis layer for claim verification
 - [ ] Evidence agent implementation
+- Note: LLM triage is already implemented and used by all current agents
 
 ### Phase 6: Wikipedia Bot
 - [ ] Wikipedia authentication
